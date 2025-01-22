@@ -1,0 +1,5 @@
+node_modules
+dist
+cache
+pnpm-lock.yaml
+.DS_Store

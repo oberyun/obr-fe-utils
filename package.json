@@ -1,0 +1,69 @@
+{
+  "name": "@obr-fe/utils",
+  "version": "1.0.6",
+  "description": "欧倍尔前端工具函数库",
+  "author": "obr-fe",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "http://gitlab.oberyun.com/obr-fe-base/lib/obr-utils"
+  },
+  "keywords": [
+    "utils",
+    "axios",
+    "typescript",
+    "vue"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./*": {
+      "types": "./dist/**/*.d.ts",
+      "import": "./dist/**/*.js",
+      "require": "./dist/**/*.cjs"
+    },
+    "./dist/*": {
+      "types": "./dist/**/*.d.ts",
+      "import": "./dist/**/*.js",
+      "require": "./dist/**/*.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "lodash.clone": "^4.5.0",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.debounce": "^4.0.8",
+    "lodash.merge": "^4.6.2",
+    "vue": "^3.4.29"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^2.27.3",
+    "@types/lodash.clone": "^4.5.9",
+    "@types/lodash.clonedeep": "^4.5.9",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/lodash.merge": "^4.6.9",
+    "@types/node": "^20.12.12",
+    "eslint": "^9.15.0",
+    "fast-glob": "^3.3.1",
+    "tsup": "^6.7.0",
+    "typescript": "^4.9.5",
+    "vitepress": "^1.0.2"
+  }
+}
