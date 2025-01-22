@@ -55,7 +55,7 @@ export function isUndefined(val: unknown): val is undefined {
 
 /**
  * @description: 判断参数已定义且不为空
- * @param {*} T
+ * @param {*} val
  * @return {*}
  * @autor: 刘 相卿
  */

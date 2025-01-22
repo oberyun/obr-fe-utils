@@ -5,23 +5,23 @@ import type { BaseOptionType, ObjectDataType, TreeItemType } from './types'
 
 /**
  * @description: 字符串元组
- * @param {*} T
+ * @param {*} args
  * @return {*}
  * @autor: 刘 相卿
  */
-export const tuple = <T extends string[]>(...args: T) => args
+export const tuple = <T extends string[]>(...args: T): T => args
 
 /**
  * @description: 数字元组
- * @param {*} T
+ * @param {*} args
  * @return {*}
  * @autor: 刘 相卿
  */
-export const tupleNum = <T extends number[]>(...args: T) => args
+export const tupleNum = <T extends number[]>(...args: T): T => args
 
 /**
  * @description: 转换为数组
- * @param {*} T
+ * @param {*} val
  * @return {*}
  * @autor: 刘 相卿
  */
@@ -117,7 +117,6 @@ export function getElementsByValues(array: TreeItemType[] = [], values: (string 
 /**
  * @description: 将树型结构数组拉平为一维数组
  * @param {TreeItemType[]} data 树型数组
- * @param {(string | number)[]} parent 父级对象
  * @param {{ value?: string; children?: string }} alias
  * @return {TreeItemType[]}
  * @autor: 刘 相卿
