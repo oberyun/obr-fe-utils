@@ -1,6 +1,6 @@
 {
   "name": "@obr-fe/utils",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Generic JavaScript utility functions by Beijing Oubeier Software.",
   "author": "oberyun",
   "license": "MIT",
@@ -8,10 +8,6 @@
   "repository": "https://github.com/oberyun/obr-fe-utils",
   "bugs": {
     "url": "https://github.com/oberyun/obr-fe-utils/issues"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "provenance": true
   },
   "keywords": [
     "utils",
