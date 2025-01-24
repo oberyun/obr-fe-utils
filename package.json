@@ -1,10 +1,18 @@
 {
   "name": "@obr-fe/utils",
   "version": "1.0.7",
-  "description": "欧倍尔前端工具函数库",
+  "description": "Generic JavaScript utility functions by Beijing Oubeier Software.",
   "author": "oberyun",
   "license": "MIT",
+  "homepage": "https://dev-fe.oberyun.com/fe-docs/obr-utils/",
   "repository": "https://github.com/oberyun/obr-fe-utils",
+  "bugs": {
+    "url": "https://github.com/oberyun/obr-fe-utils/issues"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "provenance": true
+  },
   "keywords": [
     "utils",
     "axios",
