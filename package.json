@@ -1,6 +1,6 @@
 {
   "name": "@obr-fe/utils",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "欧倍尔前端工具函数库",
   "author": "oberyun",
   "license": "MIT",
@@ -9,7 +9,8 @@
     "utils",
     "axios",
     "typescript",
-    "vue"
+    "vue",
+    "lodash"
   ],
   "exports": {
     ".": {
@@ -48,6 +49,8 @@
     "lodash.clone": "^4.5.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
+    "lodash.get": "^4.4.2",
+    "lodash.has": "^4.5.2",
     "lodash.merge": "^4.6.2",
     "vue": "^3.4.29"
   },
@@ -56,6 +59,8 @@
     "@types/lodash.clone": "^4.5.9",
     "@types/lodash.clonedeep": "^4.5.9",
     "@types/lodash.debounce": "^4.0.9",
+    "@types/lodash.get": "^4.4.9",
+    "@types/lodash.has": "^4.5.9",
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^20.12.12",
     "eslint": "^9.15.0",
