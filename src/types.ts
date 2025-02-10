@@ -1,4 +1,4 @@
-import type { AxiosInstance, AxiosInterceptorManager, AxiosRequestConfig, AxiosResponse, AxiosStatic, CreateAxiosDefaults, Method } from 'axios'
+import type { AxiosError, AxiosInstance, AxiosInterceptorManager, AxiosRequestConfig, AxiosResponse, AxiosStatic, CanceledError, CreateAxiosDefaults, Method } from 'axios'
 
 export type ObjectDataType<T = any, D extends string = string> = Record<D, T>
 
@@ -171,11 +171,11 @@ export interface ErrorContentObject {
   }
   CANCEL: {
     type: 'CANCEL'
-    content: unknown
+    content: CanceledError<any>
   }
   ERROR: {
     type: 'ERROR'
-    content: unknown
+    content: AxiosError<any>
   }
 }
 
@@ -212,7 +212,7 @@ export interface RequestBaseConfig extends AxiosRequestConfig {
   afterRequest?: (response: ObrAxiosResponse<ResDataType>, options: RequestBaseConfig) => ObrAxiosResponse<ResDataType>
   401?: (error: ErrorType<'REQUEST'>) => any
   cancel?: (error: ErrorType<'CANCEL'>) => any
-  error?: (error: ErrorType<'ERROR'>) => any
+  error?: (error: ErrorType) => any
 }
 
 export type RequestMethod = Method

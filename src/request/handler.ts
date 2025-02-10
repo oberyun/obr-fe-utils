@@ -77,23 +77,19 @@ export function useRequestHandler(config: ObrAxiosRequestConfig, options: Reques
 
 // 错误拦截(status !== 200)
 export function useErrorHandler(error: ErrorType) {
-  if (error.type === 'REQUEST') {
-    if (getUnauthorizedCode(error.options.unauthorizedCode).includes(error.content.code)) {
-      // 响应报错(401)
-      // 移除所有请求
-      removeAllPending()
+  if (error.type === 'REQUEST' && getUnauthorizedCode(error.options.unauthorizedCode).includes(error.content.code)) {
+    // 响应报错(401)
+    // 移除所有请求
+    removeAllPending()
 
-      // 调用自定义的401捕捉函数
-      if (error.options[401]) {
-        return error.options[401](error)
-      }
+    // 调用自定义的401捕捉函数
+    if (error.options[401]) {
+      return error.options[401](error)
     }
   }
-  else if (error.type === 'CANCEL') {
-    if (error.options.cancel) {
-      // 请求取消报错 调用自定义的cancel捕捉函数
-      return error.options.cancel(error)
-    }
+  else if (error.type === 'CANCEL' && error.options.cancel) {
+    // 请求取消报错 调用自定义的cancel捕捉函数
+    return error.options.cancel(error)
   }
   else if (error.options.error) {
     // 其他错误 调用自定义的error捕捉函数
@@ -107,6 +103,7 @@ export function useErrorHandler(error: ErrorType) {
 // status === 200
 export async function useResponseHandler(response: ObrAxiosResponse<ResDataType>, options: RequestBaseConfig) {
   const { data: rdata, config: rconfig } = response
+
   let data: ResDataType<ResDataType<any>> = rdata
   let config: InternalAxiosRequestConfig<any> = rconfig
 
