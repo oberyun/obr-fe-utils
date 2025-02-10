@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    function isEmptyObject(object) {
+      return !object || Object.getOwnPropertyNames(object).length === 0
+    }
+
+    const isNumber = (val) => typeof val === 'number'
+
+
+    const isObjectDataType = (val) => Object.prototype.toString.call(val) === '[object Object]'
+    function deleteElementPro(array, rules) {
+      return array.filter((a) => {
+        const valid = rules.some((r) => {
+          // 规则为对象 且 数组的单个元素值也是对象
+          if (isObjectDataType(r) && isObjectDataType(a)) {
+            // 当规则为空对象时 仅判断元素值是否为空对象
+            if (isEmptyObject(r))
+              return isEmptyObject(a)
+            // 判断数据对象中对应的key值是否和规则中的key值一致
+            return Object.entries(r).every(([key, value]) => value === a[key])
+          }
+          else if (isNumber(r) && Number.isNaN(r)) {
+            // NaN的判断
+            return isNumber(a) && Number.isNaN(a)
+          }
+          else {
+            // 其他类型的判断
+            return a === r
+          }
+        })
+
+        return !valid
+      })
+    }
+
+    const array = [1, '2', 3, 4, 5]
+
+    console.log(deleteElementPro(array, ['2']));
+
+  </script>
+</body>
+
+</html>

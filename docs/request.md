@@ -25,13 +25,13 @@ const http = new ObrRequest({
     console.log('ObrAxiosResponse<ResDataType>', response)
     return response
   },
-  401: (error: ResDataType) => {
+  401: (error: ErrorType<'REQUEST'>) => {
     console.log('处理401错误', error)
   },
-  cancel: (error: any) => {
+  cancel: (error: ErrorType<'CANCEL'>) => {
     console.log('处理请求取消捕捉的错误', error)
   },
-  error: (error: any) => {
+  error: (error: ErrorType<'ERROR'>) => {
     console.log('处理其他请求错误(服务端错误/客户端错误)捕捉的错误', error)
   }
 })

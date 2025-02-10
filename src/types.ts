@@ -165,12 +165,28 @@ export interface PageResType<R = ObjectDataType> {
  * @autor: 刘 相卿
  */
 export interface ErrorContentObject {
-  REQUEST: ResDataType
-  CANCEL: any
-  ERROR: any
+  REQUEST: {
+    type: 'REQUEST'
+    content: ResDataType
+  }
+  CANCEL: {
+    type: 'CANCEL'
+    content: unknown
+  }
+  ERROR: {
+    type: 'ERROR'
+    content: unknown
+  }
 }
 
-export interface ErrorType<T extends keyof ErrorContentObject> { type: T, content: ErrorContentObject[T], options: RequestBaseConfig }
+interface ErrorBasicType {
+  options: RequestBaseConfig
+  response?: ObrAxiosResponse<ResDataType>
+}
+
+export type ErrorTypeKey = keyof ErrorContentObject
+
+export type ErrorType<T extends ErrorTypeKey = ErrorTypeKey> = ErrorBasicType & ErrorContentObject[T]
 
 /**
  * @description: 分页查询请求参数
@@ -187,13 +203,14 @@ export interface RequestBaseConfig extends AxiosRequestConfig {
   basePath?: string
   allowCancel?: boolean
   allowNullValue?: boolean
-  successCode?: number
+  successCode?: number | number[]
+  unauthorizedCode?: number | number[] // 401 code
   whiteUrl?: () => string[]
   alias?: () => Partial<ResAlias>
   token?: TokenConfig
   beforeRequest?: (config: ObrAxiosRequestConfig) => ObrAxiosRequestConfig
   afterRequest?: (response: ObrAxiosResponse<ResDataType>, options: RequestBaseConfig) => ObrAxiosResponse<ResDataType>
-  401?: (error: ResDataType) => any
+  401?: (error: ErrorType<'REQUEST'>) => any
   cancel?: (error: ErrorType<'CANCEL'>) => any
   error?: (error: ErrorType<'ERROR'>) => any
 }

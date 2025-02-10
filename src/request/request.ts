@@ -20,9 +20,12 @@ export class ObrRequest {
   }
 
   private setupInterceptors(options: RequestBaseConfig) {
-    const instance = (axios as ObrAxiosStatic).create(omit(options, ['basePath', 'allowCancel', 'allowNullValue', 'successCode', 'whiteUrl', 'alias', 'token', 'beforeRequest', 'afterRequest', 401, 'cancel', 'error']))
+    const instance = (axios as ObrAxiosStatic).create(omit(options, ['basePath', 'allowCancel', 'allowNullValue', 'successCode', 'unauthorizedCode', 'whiteUrl', 'alias', 'token', 'beforeRequest', 'afterRequest', 401, 'cancel', 'error']))
     instance.interceptors.request.use(config => useRequestHandler(config, this.options))
-    instance.interceptors.response.use(response => useResponseHandler(response, this.options), error => useErrorHandler(isCancel(error) ? 'CANCEL' : 'ERROR', error, this.options))
+    instance.interceptors.response.use(
+      response => useResponseHandler(response, this.options),
+      error => useErrorHandler({ type: isCancel(error) ? 'CANCEL' : 'ERROR', content: error, options: this.options }),
+    )
     return instance
   }
 

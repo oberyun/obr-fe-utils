@@ -1,7 +1,7 @@
 import type { BaseOptionType, ObjectDataType, OptionResAlias, PageAlias, PageQueryType, PageResType, ResAlias, ResDataType } from '../../types'
 import { OPTION_RES_ALIAS, RECORD_RES_ALIAS, RES_ALIAS } from '../constant'
-import { isBoolean, isEmptyValue, isNumber, isObjectDataType, isString } from '../../base'
-import { uniqueArrayByKeys } from '../../array'
+import { isBoolean, isEmptyArray, isEmptyValue, isNumber, isObjectDataType, isString } from '../../base'
+import { deleteEmptyElement, uniqueArrayByKeys } from '../../array'
 
 export function sort(object: ObjectDataType = {}) {
   const keys: string[] = Object.keys(object).sort()
@@ -78,4 +78,20 @@ export function formatPageRecords<T = ObjectDataType>(data: ObjectDataType, alia
     records: data[records] ?? [],
     total: data[total] ?? 0,
   }
+}
+
+export function getSuccessCode(code?: number | number[]) {
+  const useCode: number[] = deleteEmptyElement([code].flat()) as number[]
+  if (isEmptyArray(useCode))
+    return [200]
+
+  return useCode
+}
+
+export function getUnauthorizedCode(code?: number | number[]) {
+  const useCode: number[] = deleteEmptyElement([code].flat()) as number[]
+  if (isEmptyArray(useCode))
+    return [401]
+
+  return useCode
 }

@@ -1,10 +1,10 @@
 import type { InternalAxiosRequestConfig } from 'axios'
-import type { ErrorContentObject, ErrorType, ObjectDataType, ObrAxiosRequestConfig, ObrAxiosResponse, RequestBaseConfig, ResDataType } from '../types'
+import type { ErrorType, ObjectDataType, ObrAxiosRequestConfig, ObrAxiosResponse, RequestBaseConfig, ResDataType } from '../types'
 import { merge } from '../lodash'
-import { ERROR_401, RES_ALIAS } from './constant'
+import { RES_ALIAS } from './constant'
 import { addPending, removeAllPending, removePending } from './utils/cancel'
 import { readBlobResponse } from './utils/file'
-import { format, formatData, sort } from './utils/format'
+import { format, formatData, getSuccessCode, getUnauthorizedCode, sort } from './utils/format'
 
 // 错误消息Map
 export const ErrorMessage: Map<number, string> = new Map()
@@ -25,7 +25,7 @@ export function requestUrl2json(url: string): ObjectDataType {
 
 export function useRequestHandler(config: ObrAxiosRequestConfig, options: RequestBaseConfig) {
   // 判断是否在401状态 且不在白名单的接口要取消执行
-  if (ErrorMessage.get(ERROR_401) && !options.whiteUrl?.().includes(config.url ?? '')) {
+  if (ErrorMessage.get(401) && !options.whiteUrl?.().includes(config.url ?? '')) {
     removePending(config, true)
   }
 
@@ -76,25 +76,28 @@ export function useRequestHandler(config: ObrAxiosRequestConfig, options: Reques
 }
 
 // 错误拦截(status !== 200)
-export function useErrorHandler<T extends keyof ErrorContentObject>(type: T, content: ErrorContentObject[T], options: RequestBaseConfig): any {
-  const error = { type, content, options }
+export function useErrorHandler(error: ErrorType) {
+  if (error.type === 'REQUEST') {
+    if (getUnauthorizedCode(error.options.unauthorizedCode).includes(error.content.code)) {
+      // 响应报错(401)
+      // 移除所有请求
+      removeAllPending()
 
-  if (type === 'REQUEST' && content.code === 401) {
-    // 响应报错
-    // 移除所有请求
-    removeAllPending()
-    // 调用自定义的401捕捉函数
-    if (options[401]) {
-      return options[401](content)
+      // 调用自定义的401捕捉函数
+      if (error.options[401]) {
+        return error.options[401](error)
+      }
     }
   }
-  else if (type === 'CANCEL' && options.cancel) {
-    // 请求取消报错 调用自定义的cancel捕捉函数
-    return options.cancel(error as ErrorType<'CANCEL'>)
+  else if (error.type === 'CANCEL') {
+    if (error.options.cancel) {
+      // 请求取消报错 调用自定义的cancel捕捉函数
+      return error.options.cancel(error)
+    }
   }
-  else if (options.error) {
+  else if (error.options.error) {
     // 其他错误 调用自定义的error捕捉函数
-    return options.error(error as ErrorType<'ERROR'>)
+    return error.options.error(error)
   }
 
   // 未配置时reject
@@ -121,29 +124,29 @@ export async function useResponseHandler(response: ObrAxiosResponse<ResDataType>
   removePending(response.config)
 
   // 401
-  if (data[alias.code] === 401) {
-    return useErrorHandler('REQUEST', formatData(data, alias), options)
+  if (getUnauthorizedCode(options.unauthorizedCode).includes(data[alias.code])) {
+    return useErrorHandler({ type: 'REQUEST', content: formatData(data, alias), options, response })
   }
   else {
     // 非401状态 删除401
-    ErrorMessage.delete(ERROR_401)
+    ErrorMessage.delete(401)
 
     // 根据不同情况处理响应数据
     if (config.responseType === 'blob') {
       // 1. 文件处理逻辑 因为文件处理返回字段不需要考虑alias
       const fileResult = await readBlobResponse(data as any)
-      if (fileResult.code === 200)
+      if (getSuccessCode(options.successCode).includes(fileResult.code))
         return formatData(fileResult, alias)
       else
-        return useErrorHandler('REQUEST', fileResult, options)
+        return useErrorHandler({ type: 'REQUEST', content: fileResult, options, response })
     }
-    else if (data[alias.code] === options.successCode) {
+    else if (getSuccessCode(options.successCode).includes(data[alias.code])) {
       // 2. json处理逻辑
       return Promise.resolve(formatData(data, alias))
     }
     else {
       // 3. 其他错误处理逻辑
-      return useErrorHandler('REQUEST', formatData(data, alias), options)
+      return useErrorHandler({ type: 'REQUEST', content: formatData(data, alias), options, response })
     }
   }
 }

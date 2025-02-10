@@ -94,15 +94,16 @@ interface RequestBaseConfig extends AxiosRequestConfig {
   basePath?: string // 配置请求本地资源的路径
   allowCancel?: boolean // 重复请求允许取消
   allowNullValue?: boolean // 请求参数过滤空值
-  successCode?: number // 请求成功的code
+  successCode?: number | number[] // 请求成功的code
+  unauthorizedCode?: number | number[] // 401 code
   whiteUrl?: () => string[] // 请求白名单(不需要在headers中配置token) 如遇其他接口401错误时白名单接口仍然正常请求
   alias?: () => Partial<ResAlias> // 配置响应数据字段的别名
   token?: TokenConfig // token配置项
   beforeRequest?: (config: ObrAxiosRequestConfig) => ObrAxiosRequestConfig // 请求前的操作
   afterRequest?: (response: ObrAxiosResponse<ResDataType>, options: RequestBaseConfig) => ObrAxiosResponse<ResDataType> // 请求后的操作
-  401?: (error: ResDataType) => any // 处理401错误
-  cancel?: (error: any) => any // 处理请求取消捕捉的错误
-  error?: (error: any) => any // 处理其他请求错误(服务端错误/客户端错误)捕捉的错误
+  401?: (error: ErrorType<'REQUEST'>) => any // 处理401错误
+  cancel?: (error: ErrorType<'CANCEL'>) => any // 处理请求取消捕捉的错误
+  error?: (error: ErrorType<'ERROR'>) => any // 处理其他请求错误(服务端错误/客户端错误)捕捉的错误
 }
 ```
 
@@ -269,10 +270,26 @@ interface PageResType<R = ObjectDataType> {
 
 ```typescript
 export interface ErrorContentObject {
-  REQUEST: ResDataType // 请求类错误(code===500...)
-  CANCEL: any // 请求被取消捕捉的错误
-  ERROR: any // 其他错误
+  REQUEST: {
+    type: 'REQUEST'
+    content: ResDataType
+  }
+  CANCEL: {
+    type: 'CANCEL'
+    content: unknown
+  }
+  ERROR: {
+    type: 'ERROR'
+    content: unknown
+  }
 }
 
-export interface ErrorType { type: keyof ErrorContentObject, content: ErrorContentObject[keyof ErrorContentObject] }
+interface ErrorBasicType {
+  options: RequestBaseConfig
+  response?: ObrAxiosResponse<ResDataType>
+}
+
+export type ErrorTypeKey = keyof ErrorContentObject
+
+export type ErrorType<T extends ErrorTypeKey = ErrorTypeKey> = ErrorBasicType & ErrorContentObject[T]
 ```

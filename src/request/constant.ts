@@ -25,7 +25,8 @@ export const DEFAULT_CONFIG: RequestBaseConfig = {
   basePath: '',
   allowCancel: false,
   allowNullValue: true,
-  successCode: 200,
+  successCode: [200],
+  unauthorizedCode: [401],
   whiteUrl: () => [],
   alias: () => (RES_ALIAS),
   token: {
@@ -33,5 +34,3 @@ export const DEFAULT_CONFIG: RequestBaseConfig = {
     get: () => '',
   },
 }
-
-export const ERROR_401 = 401
