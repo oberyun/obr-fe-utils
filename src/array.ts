@@ -121,12 +121,17 @@ export function getElementsByValues(array: TreeItemType[] = [], values: (string 
  * @return {TreeItemType[]}
  * @autor: 刘 相卿
  */
-export function tree2array(data: TreeItemType[] = [], alias: string = 'children'): ObjectDataType[] {
-  const result: ObjectDataType[] = []
-  const flat = (data: TreeItemType[], useAlias: string) => {
+export function tree2array<T extends ObjectDataType = ObjectDataType>(data: T[] = [], alias: string = 'children', reserveChildren: boolean = false): T[] {
+  const result: T[] = []
+  const flat = (data: T[], useAlias: string) => {
     data.forEach((element) => {
       const { [useAlias]: children, ...rest } = element
-      result.push(rest)
+      if (reserveChildren) {
+        result.push(element)
+      }
+      else {
+        result.push(rest as T)
+      }
       if (children) {
         flat(children, useAlias)
       }
