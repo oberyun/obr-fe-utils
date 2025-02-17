@@ -93,7 +93,7 @@ export function deleteEmptyElement<T>(array: T[]): T[] {
  * @return {*}
  * @autor: 刘 相卿
  */
-export function getElementsByValues(array: TreeItemType[] = [], values: (string | number)[], alias?: { value?: string, children?: string }): ObjectDataType[] {
+export function getElementsByValues(array: TreeItemType[] = [], values: (string | number)[], alias?: { value?: string, children?: string }, reserveChildren: boolean = false): ObjectDataType[] {
   const useAlias = {
     value: 'value',
     children: 'children',
@@ -106,7 +106,7 @@ export function getElementsByValues(array: TreeItemType[] = [], values: (string 
   if (!isEmptyValue(value) && !isEmptyValue(data)) {
     const { [useAlias.children]: children, ...rest } = data as TreeItemType
     return result.concat(
-      rest,
+      reserveChildren ? { ...rest, children } : rest,
       ...getElementsByValues(children ?? [], values.slice(1), useAlias),
     )
   }
