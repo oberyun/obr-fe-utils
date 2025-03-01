@@ -6,6 +6,7 @@ outline: deep
 
 | 版本号        |  更新时间  | 更新内容                                           | 更新人  |
 | ------------- | :--------: | -------------------------------------------------- | :-----: |
+| `1.0.15`      | 2025-03-02 | fix export function parseTemplate                  | 刘 相卿 |
 | `1.0.14`      | 2025-03-02 | 增加 `parseTemplate` `kebabcase`  `camelcase` 函数 | 刘 相卿 |
 | `1.0.13`      | 2025-02-17 | `tree2array`增加`reserveChildren`选项              | 刘 相卿 |
 | `1.0.12`      | 2025-02-17 | `getElementsByValues`增加`reserveChildren`选项     | 刘 相卿 |
