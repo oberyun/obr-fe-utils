@@ -125,6 +125,32 @@ const result = await getUserOptions({ type: 'all' }) // [{ label: 'user01_', val
 // 如 { name: '名称', age: '年龄' } => [{ label: '名称', value: 'name', json: { label: '名称', value: 'name' } }, { label: '年龄', value: 'age', json: { label: '年龄', value: 'age' } } }]
 ```
 
+## 级联字典请求
+```typescript
+export async function fn() {
+  const options: CascaderRequestOption[] = [
+    {
+      url: '/api/v1/xxx',
+      method: 'POST',
+      alias: { label: 'itemText', value: 'itemValue' },
+      params: [{ key: 'codes', toValue: true, source: [{ path: '123', defaultValue: ['1'] }] }],
+    },
+    {
+      url: '/api/v1/xxx/v',
+      method: 'POST',
+      alias: { label: 'unitNameEn', value: 'id' },
+      params: [{ key: 'unitType', source: [{ path: 'itemValue', defaultValue: 1 }] }],
+
+    },
+  ]
+
+  // 递归调用 http.getOptions 函数 返回树型级联数据
+  await http.getCascaderOptions(options, {})
+}
+
+fn()
+```
+
 ## 默认请求(request)
 ```typescript
 interface UserInfo {

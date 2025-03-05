@@ -50,6 +50,20 @@ export interface OptionResAlias {
   json: string
 }
 
+export interface CascaderRequestOption {
+  url: string
+  method?: Method
+  params?: RequestParamConfig[]
+  alias?: Partial<Omit<OptionResAlias, 'json'> & { children: string }>
+}
+
+export interface CascaderOptionType<T extends ObjectDataType = ObjectDataType> {
+  label: string
+  value: any
+  json?: T
+  children?: CascaderOptionType<T>[]
+}
+
 /**
  * @description: Token配置类型
  * @param {string} key token的键名称
@@ -216,3 +230,15 @@ export interface RequestBaseConfig extends AxiosRequestConfig {
 }
 
 export type RequestMethod = Method
+
+/**
+ * @description: 请求参数配置
+ * @return {*}
+ * @autor: 刘 相卿
+ */
+export interface RequestParamConfig {
+  key: string
+  required?: boolean
+  toValue?: boolean
+  source: { path?: string, defaultValue?: string, formatter?: 'toArray' | 'toString' | 'toNumber' }[]
+}

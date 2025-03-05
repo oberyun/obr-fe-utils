@@ -1,5 +1,5 @@
 import axios, { isCancel } from 'axios'
-import type { BaseOptionType, ObjectDataType, ObrAxiosInstance, ObrAxiosRequestConfig, ObrAxiosStatic, OptionResAlias, PageAlias, PageQueryType, PageResType, RequestBaseConfig, RequestMethod, ResDataType } from '../types'
+import type { BaseOptionType, CascaderOptionType, CascaderRequestOption, ObjectDataType, ObrAxiosInstance, ObrAxiosRequestConfig, ObrAxiosStatic, OptionResAlias, PageAlias, PageQueryType, PageResType, RequestBaseConfig, RequestMethod, ResDataType } from '../types'
 import { merge } from '../lodash'
 import { json2formdata, omit } from '../object'
 import { isArray, isObject } from '../base'
@@ -7,6 +7,7 @@ import { DEFAULT_CONFIG } from './constant'
 import { useErrorHandler, useRequestHandler, useResponseHandler } from './handler'
 import { removeAllPending, removePending } from './utils/cancel'
 import { formatOption, formatPageQuery, formatPageRecords } from './utils/format'
+import { getRequestParamValues } from './utils/params'
 
 export class ObrRequest {
   // 配置项
@@ -97,7 +98,7 @@ export class ObrRequest {
   }
 
   /**
-   * @description: 获取options类型数据（下拉选择/字典等）
+   * @description: 获取options类型数据(下拉选择/字典等)
    * @param {string} url
    * @param {ObjectDataType} params
    * @param {RequestMethod} method
@@ -114,11 +115,55 @@ export class ObrRequest {
       return formatOption(data, alias, unique)
     }
     else if (isObject(data)) {
-      const objectArray = Object.entries(data).map(d => ({ label: d[1], value: d[0] }))
-      return formatOption(objectArray, undefined, unique)
+      // 判断返回的是不是Record<string, array>
+      const isArrayMap = Object.values(data).every(d => isArray(d))
+      if (isArrayMap) {
+        const array = Object.values(data).flat()
+        return formatOption(array, alias, unique)
+      }
+      else {
+        const objectArray = Object.entries(data).map(([key, value]) => ({ label: value, value: key }))
+        return formatOption(objectArray, undefined, unique)
+      }
     }
 
     return []
+  }
+
+  /**
+   * @description: 获取级联类型数据(谨慎使用!!! 会发起大量请求!!!)
+   * @param {CascaderRequestOption} options 级联请求配置项
+   * @param {ObjectDataType} params 所有层级的请求参数(共用)
+   * @param {ObrAxiosRequestConfig} config
+   * @param {boolean} unique 单一层级下的去重
+   * @return {*}
+   * @autor: 刘 相卿
+   */
+  async getCascaderOptions<T extends ObjectDataType = ObjectDataType>(options: CascaderRequestOption[], params: ObjectDataType = {}, config?: ObrAxiosRequestConfig, unique: boolean = true): Promise<CascaderOptionType<T>[]> {
+    if (!options.length) {
+      return []
+    }
+
+    const fn = async (options: CascaderRequestOption[], index: number, _params: ObjectDataType = {}) => {
+      const option = options[index]
+      if (!option?.url) {
+        return []
+      }
+
+      const data = getRequestParamValues(option.params, _params) ?? {}
+
+      const result: CascaderOptionType<T>[] = (await this.getOptions<T>(option.url, isObject(data) ? merge({}, params, data) : data, option.method, option.alias, config, unique)).map(d => ({ ...d, children: d.json?.children ?? [] }))
+      for (let idx = 0; idx < result.length; idx++) {
+        result[idx].children = await fn(options, index + 1, result[idx].json)
+      }
+
+      return result
+    }
+
+    // 第一次请求只是用params参数
+    const result: CascaderOptionType<T>[] = await fn(options, 0, params)
+
+    return result
   }
 
   /**
