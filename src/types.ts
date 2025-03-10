@@ -240,5 +240,5 @@ export interface RequestParamConfig {
   key: string
   required?: boolean
   toValue?: boolean
-  source: { path?: string, defaultValue?: string, formatter?: 'toArray' | 'toString' | 'toNumber' }[]
+  source: { path?: string, defaultValue?: any, formatter?: 'toArray' | 'toString' | 'toNumber' }[]
 }

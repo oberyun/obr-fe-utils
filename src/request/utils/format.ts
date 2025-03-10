@@ -2,6 +2,7 @@ import type { BaseOptionType, ObjectDataType, OptionResAlias, PageAlias, PageQue
 import { OPTION_RES_ALIAS, RECORD_RES_ALIAS, RES_ALIAS } from '../constant'
 import { isBoolean, isEmptyArray, isEmptyValue, isNumber, isObjectDataType, isString } from '../../base'
 import { deleteEmptyElement, uniqueArrayByKeys } from '../../array'
+import { parseTemplate } from '../../parse'
 
 export function sort(object: ObjectDataType = {}) {
   const keys: string[] = Object.keys(object).sort()
@@ -44,8 +45,10 @@ export function formatOption<T = ObjectDataType>(array: any[], alias: Partial<Op
 
   const options = array.reduce((result, current) => {
     if (isObjectDataType(current)) {
+      const useLabel = label.includes('#{') ? label : `#{${label}}`
+
       result.push({
-        label: current[label],
+        label: parseTemplate(useLabel, current, { prefix: '#{', suffix: '}' }),
         value: current[value],
         json: current[json] ?? current,
       })

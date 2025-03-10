@@ -102,7 +102,7 @@ export class ObrRequest {
    * @param {string} url
    * @param {ObjectDataType} params
    * @param {RequestMethod} method
-   * @param {Partial} alias
+   * @param {Partial} alias alias.label可设置为模板 #{name}/#{no} 从模板中获取
    * @param {ObrAxiosRequestConfig} config
    * @param {boolean} unique
    * @return {Promise<BaseOptionType<T>[]>}
