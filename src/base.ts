@@ -272,19 +272,18 @@ export function string2json<T>(str: string, defaultValue?: T): T {
 /**
  * @description: JSON对象转换为JSON字符串
  * @param {any} json
+ * @param {string} defaultValue
  * @return {string}
  * @autor: 刘 相卿
  */
-export function json2string(json: any): string {
-  let str = ''
+export function json2string(json: any, defaultValue: string = ''): string {
+  let str = defaultValue
   try {
-    if (!!str && (isArray(json) || isObject(json))) {
-      str = JSON.stringify(str)
-    }
+    str = JSON.stringify(json)
   }
   // eslint-disable-next-line unused-imports/no-unused-vars
   catch (error) {
-    str = ''
+    str = defaultValue
   }
 
   return str
