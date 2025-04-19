@@ -8,7 +8,7 @@ export default defineConfig({
   dts: {
     resolve: true,
   },
-  external: ['vue'],
+  external: ['vue', 'pinyin-pro', 'crypto-js'], // 排除的依赖
   clean: true,
   minify: true,
 })

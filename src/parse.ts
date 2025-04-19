@@ -6,6 +6,9 @@ import type { ObjectDataType } from './types'
  * @param {string} template
  * @param {ObjectDataType} data
  * @param {object} options
+ * @param {string} options.prefix
+ * @param {string} options.suffix
+ * @param {string | number} options.defaultValue
  * @return {*}
  * @autor: 刘 相卿
  */

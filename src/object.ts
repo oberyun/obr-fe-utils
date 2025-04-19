@@ -1,5 +1,7 @@
+import merge from 'lodash.merge'
+import cloneDeep from 'lodash.clonedeep'
 import type { ObjectDataType } from './types'
-import { isEmptyValue, isString } from './base'
+import { isEmptyObject, isEmptyValue, isObject, isString } from './base'
 
 /**
  * @description: pick函数
@@ -193,4 +195,30 @@ export function getObjectFromMapping(data: ObjectDataType, mapping: Record<strin
     object[dkey] = data[mkey]
     return object
   }, {} as ObjectDataType)
+}
+
+/**
+ * @description: 合并对象
+ * @param {ObjectDataType} data
+ * @param {ObjectDataType} mergeData
+ * @return {*}
+ * @autor: 刘 相卿
+ */
+export function mergeObject<T extends ObjectDataType = ObjectDataType>(data: T, mergeData: ObjectDataType = {}): T {
+  const result: T = merge({}, data)
+
+  if (isEmptyObject(mergeData))
+    return result
+
+  for (const key in mergeData) {
+    const _key = key as keyof T
+    if (isObject(mergeData[key]) && isObject(result[key])) {
+      result[_key] = mergeObject<T>(result[_key], mergeData[key]) as any
+    }
+    else {
+      result[_key] = mergeData[key]
+    }
+  }
+
+  return cloneDeep(result)
 }
