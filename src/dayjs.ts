@@ -1,4 +1,7 @@
 import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn' // 中文
+import 'dayjs/locale/en' // 英文
+
 import { isArray, isEmptyValue } from './base'
 
 export { dayjs }
@@ -18,7 +21,15 @@ function transformFormatter(format: string) {
   return (found[0] || 's') as dayjs.OpUnitType
 }
 
-export function dayRangeFormatter(value: dayjs.ConfigType[], formatType: DateType = 'date', format: string = 'YYYY-MM-DD') {
+/**
+ * @description: 区间选择格式化
+ * @param {dayjs} value
+ * @param {DateType} formatType
+ * @param {string} format
+ * @return {*}
+ * @autor: 刘 相卿
+ */
+export function dateRangeFormatter(value: dayjs.ConfigType[], formatType: DateType = 'date', format: string = 'YYYY-MM-DD') {
   if (isArray(value) && value.some(val => isEmptyValue(val)))
     return value
   const [start, end] = value
@@ -30,4 +41,34 @@ export function dayRangeFormatter(value: dayjs.ConfigType[], formatType: DateTyp
   const char = transformFormatter(format || 'YYYY-MM-DD')
 
   return [dayjs(start).startOf(char).format('YYYY-MM-DD HH:mm:ss'), dayjs(end).endOf(char).format('YYYY-MM-DD HH:mm:ss')]
+}
+
+/**
+ * @description: 设置语言
+ * @param {*} locale
+ * @return {*}
+ * @autor: 刘 相卿
+ */
+export function setLocale(locale: 'zh-cn' | 'en' = 'zh-cn') {
+  dayjs.locale(locale)
+}
+
+/**
+ * @description: 动态注册dayjs组件
+ * @param {string} pluginName
+ * @return {*}
+ * @autor: 刘 相卿
+ */
+export async function registryDayjsPlugin(pluginName: string[]): Promise<void> {
+  const plugins = pluginName.map(name => () => import(`dayjs/plugin/${name}`))
+
+  for (const plugin of plugins) {
+    try {
+      const _plugin = await plugin()
+      dayjs.extend(_plugin)
+    }
+    catch (error) {
+      console.error('[registryDayjsPlugin]dayjs组件注册失败:', error)
+    }
+  }
 }
