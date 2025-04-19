@@ -4,6 +4,8 @@ import 'dayjs/locale/en' // 英文
 
 import { isArray, isEmptyValue } from './base'
 
+export type { Dayjs } from 'dayjs'
+
 export { dayjs }
 
 export type DateType = 'year' | 'month' | 'date' | 'week'
