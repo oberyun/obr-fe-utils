@@ -40,7 +40,8 @@ export interface MappingType {
 
 export interface BaseOptionType<T = ObjectDataType> extends ObjectDataType {
   label: string
-  value: string | number
+  value: any
+  disabled?: boolean
   json?: T
 }
 
