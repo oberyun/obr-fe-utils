@@ -1,7 +1,8 @@
+import get from 'lodash.get'
 import type { BaseOptionType, ObjectDataType, OptionResAlias, PageAlias, PageQueryType, PageResType, ResAlias, ResDataType } from '../../types'
 import { OPTION_RES_ALIAS, RECORD_RES_ALIAS, RES_ALIAS } from '../constant'
 import { isBoolean, isEmptyArray, isEmptyValue, isNumber, isObjectDataType, isString } from '../../base'
-import { deleteEmptyElement, uniqueArrayByKeys } from '../../array'
+import { deleteEmptyElement, tree2array, uniqueArrayByKeys } from '../../array'
 import { parseTemplate } from '../../parse'
 
 export function sort(object: ObjectDataType = {}) {
@@ -41,17 +42,28 @@ export function formatData(object: ResDataType, alias: ResAlias = RES_ALIAS): Re
 }
 
 export function formatOption<T = ObjectDataType>(array: any[], alias: Partial<OptionResAlias> = OPTION_RES_ALIAS, unique = true): BaseOptionType<T>[] {
-  const { label = 'label', value = 'value', json = 'json' } = alias
+  const { label = 'label', value = 'value', json = 'json', disabled = 'disabled', children = 'children' } = alias
 
-  const options = array.reduce((result, current) => {
+  let _array = array
+
+  // 判断是否为树形数据 元素必须是对象且对象的键必须包含 children 字段 这里用some判断是因为可能某些层级不存在children
+  const isTreeData = array.some(current => isObjectDataType(current) && Object.keys(current).includes(children))
+  if (isTreeData) {
+    _array = tree2array(array, children)
+  }
+
+  const options = _array.reduce((result, current) => {
     if (isObjectDataType(current)) {
       const useLabel = label.includes('#{') ? label : `#{${label}}`
 
-      result.push({
+      const option = {
         label: parseTemplate(useLabel, current, { prefix: '#{', suffix: '}' }),
-        value: current[value],
-        json: current[json] ?? current,
-      })
+        value: get(current, value),
+        disabled: get(current, disabled) ?? false,
+        json: get(current, json) ?? current,
+      }
+
+      result.push(option)
     }
     else if (isNumber(current) || isString(current) || isBoolean(current)) {
       result.push({

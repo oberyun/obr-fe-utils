@@ -43,11 +43,14 @@ export interface BaseOptionType<T = ObjectDataType> extends ObjectDataType {
   value: any
   disabled?: boolean
   json?: T
+  children?: BaseOptionType<T>[]
 }
 
 export interface OptionResAlias {
   label: string
   value: string
+  disabled: string
+  children: string
   json: string
 }
 
@@ -55,12 +58,13 @@ export interface CascaderRequestOption {
   url: string
   method?: Method
   params?: RequestParamConfig[]
-  alias?: Partial<Omit<OptionResAlias, 'json'> & { children: string }>
+  alias?: Partial<Omit<OptionResAlias, 'json'>>
 }
 
 export interface CascaderOptionType<T extends ObjectDataType = ObjectDataType> {
   label: string
   value: any
+  disabled?: boolean
   json?: T
   children?: CascaderOptionType<T>[]
 }

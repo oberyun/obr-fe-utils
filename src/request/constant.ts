@@ -10,6 +10,8 @@ export const OPTION_RES_ALIAS: OptionResAlias = {
   label: 'label',
   value: 'value',
   json: 'json',
+  disabled: 'disabled',
+  children: 'children',
 }
 
 export const RECORD_RES_ALIAS: PageAlias = {

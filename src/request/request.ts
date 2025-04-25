@@ -111,20 +111,21 @@ export class ObrRequest {
   async getOptions<T = ObjectDataType>(url: string, params: ObjectDataType = {}, method: RequestMethod = 'GET', alias?: Partial<OptionResAlias>, config?: ObrAxiosRequestConfig, unique: boolean = true): Promise<BaseOptionType<T>[]> {
     const isGET = method.toUpperCase() === 'GET'
     const { data = [] } = await this.instance.request({ ...config, url, method, params, data: !isGET ? params : {} })
+
     if (isArray(data)) {
       return formatOption(data, alias, unique)
     }
-    else if (isObject(data)) {
+
+    if (isObject(data)) {
       // 判断返回的是不是Record<string, array>
       const isArrayMap = Object.values(data).every(d => isArray(d))
       if (isArrayMap) {
         const array = Object.values(data).flat()
         return formatOption(array, alias, unique)
       }
-      else {
-        const objectArray = Object.entries(data).map(([key, value]) => ({ label: value, value: key }))
-        return formatOption(objectArray, undefined, unique)
-      }
+
+      const objectArray = Object.entries(data).map(([key, value]) => ({ label: value, value: key }))
+      return formatOption(objectArray, undefined, unique)
     }
 
     return []
