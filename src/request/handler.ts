@@ -133,7 +133,7 @@ export async function useResponseHandler(response: ObrAxiosResponse<ResDataType>
       // 1. 文件处理逻辑 因为文件处理返回字段不需要考虑alias
       const fileResult = await readBlobResponse(data as any)
       if (getSuccessCode(options.successCode).includes(fileResult.code))
-        return formatData(fileResult, alias)
+        return formatData(fileResult)
       else
         return useErrorHandler({ type: 'REQUEST', content: fileResult, options, response })
     }
