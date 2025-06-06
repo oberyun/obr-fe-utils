@@ -2,22 +2,24 @@ import type { ResDataType } from '../../types'
 
 export function readBlobResponse(file: Blob): Promise<ResDataType> {
   return new Promise((resolve) => {
-    const fileReader = new FileReader()
-    fileReader.readAsText(file)
     let result: ResDataType = {
       code: 200,
-      data: null,
+      data: file,
       msg: '',
     }
-    fileReader.onloadend = () => {
-      if (file.type === 'application/json') {
-        result = JSON.parse(fileReader.result as string)
-      }
-      else {
-        result.data = file
-      }
 
+    if (file.type !== 'application/json') {
       resolve(result)
+    }
+    else {
+      const fileReader = new FileReader()
+      fileReader.readAsText(file)
+
+      fileReader.onloadend = () => {
+        result = JSON.parse(fileReader.result as string)
+
+        resolve(result)
+      }
     }
   })
 }
