@@ -34,7 +34,5 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Publish to npm
+      - name: Publish to npm using OIDC
         run: pnpm publish --provenance --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
