@@ -15,22 +15,22 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 9
+          version: latest
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: "20"
-          registry-url: "https://registry.npmjs.org"
+          node-version: "lts/*"
           cache: pnpm
 
       - run: pnpm install
       - run: pnpm build
 
-      - name: Publish
-        env:
+      - env:
           GITHUB_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
+        run: pnpm publish
