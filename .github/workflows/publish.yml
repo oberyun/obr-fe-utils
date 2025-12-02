@@ -33,4 +33,4 @@ jobs:
 
       - env:
           GITHUB_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm publish
+        run: pnpm release
