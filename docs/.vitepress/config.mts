@@ -16,11 +16,9 @@ export default defineConfig({
           { text: 'utils 文档', link: '/api-docs' },
           { text: 'request 文档', link: '/request' },
           { text: '更新日志', link: '/changelogs' },
+          { text: '友链', link: '/links' },
         ],
       },
-    ],
-    socialLinks: [
-      { icon: 'npm', link: 'https://dev-fe.oberyun.com/npm/-/web/detail/@obr-fe/utils' },
     ],
     search: {
       provider: 'local',

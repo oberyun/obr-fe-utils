@@ -15,7 +15,7 @@ pnpm add @obr-fe/utils
 
 ## Example
 
-[@obr-fe/utils Document](https://dev-fe.oberyun.com/fe-docs/obr-utils/).
+[@obr-fe/utils Document](https://fe.devops.oberyun.com/fe-docs/obr-utils/).
 
 ## License
 
