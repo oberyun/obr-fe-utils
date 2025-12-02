@@ -27,7 +27,7 @@ jobs:
       - run: pnpm install
       - run: pnpm build
 
-      - env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - run: pnpm publish --access public --no-git-checks
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
