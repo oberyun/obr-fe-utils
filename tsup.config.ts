@@ -1,4 +1,4 @@
-import { defineConfig } from 'tsdown'
+import { defineConfig } from 'tsup'
 import fg from 'fast-glob'
 
 const files = fg.sync(['./src/**/*.ts', '!src/**/*.d.ts'])

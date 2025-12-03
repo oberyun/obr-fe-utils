@@ -1,6 +1,6 @@
 {
   "name": "@obr-fe/utils",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Generic JavaScript utility functions by Beijing Oubeier Software.",
   "author": "oberyun",
   "license": "MIT",
@@ -40,8 +40,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsdown",
-    "dev": "tsdown --watch",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
@@ -79,7 +79,7 @@
     "@types/node": "^20.12.12",
     "eslint": "^9.15.0",
     "fast-glob": "^3.3.1",
-    "tsdown": "0.17.0-beta.5",
+    "tsup": "^8.5.1",
     "typescript": "^4.9.5",
     "vitepress": "^1.0.2"
   }
