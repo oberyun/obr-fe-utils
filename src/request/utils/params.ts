@@ -1,4 +1,4 @@
-import get from 'lodash.get'
+import { get } from 'es-toolkit/compat'
 import { isArray, isEmptyValue, isObject, isString } from '../../base'
 import type { ObjectDataType, RequestParamConfig } from '../../types'
 

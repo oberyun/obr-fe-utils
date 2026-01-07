@@ -1,4 +1,4 @@
-import get from 'lodash.get'
+import { get } from 'es-toolkit/compat'
 import type { BaseOptionType, ObjectDataType, OptionResAlias, PageAlias, PageQueryType, PageResType, ResAlias, ResDataType } from '../../types'
 import { OPTION_RES_ALIAS, RECORD_RES_ALIAS, RES_ALIAS } from '../constant'
 import { isBoolean, isEmptyArray, isEmptyValue, isNumber, isObjectDataType, isString } from '../../base'

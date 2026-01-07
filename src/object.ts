@@ -1,5 +1,4 @@
-import merge from 'lodash.merge'
-import cloneDeep from 'lodash.clonedeep'
+import { cloneDeep, merge } from 'es-toolkit/compat'
 import type { ObjectDataType } from './types'
 import { isEmptyObject, isEmptyValue, isObject, isString } from './base'
 
