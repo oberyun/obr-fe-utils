@@ -44,7 +44,7 @@ jobs:
       # 打tag并推送
       - name: create and push tag
         id: tag_version
-        uses: https://gitee.com/youtellme/github-tag-action@v1
+        uses: anothrNick/github-tag-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
@@ -54,13 +54,13 @@ jobs:
 
       - name: Generate Changelog
         id: generate_changelog
-        uses: https://gitee.com/youtellme/simple-changelog-action@v1
+        uses: lxqmoma/simple-changelog-action@v1
         with:
           new_tag: ${{ steps.tag_version.outputs.new_tag }}
           old_tag: ${{ steps.tag_version.outputs.old_tag }}
 
       - name: create release
-        uses: https://gitee.com/youtellme/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
