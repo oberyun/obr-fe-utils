@@ -29,6 +29,40 @@ jobs:
       - run: pnpm install
       - run: pnpm build
 
+      # 压缩 dist 文件夹
+      - name: zip dist folder
+        run: |
+          zip -r -q dist.zip dist/
+          ls -lh dist.zip
+
+      # 打tag并推送
+      - name: create and push tag
+        id: tag_version
+        uses: https://gitee.com/youtellme/github-tag-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch
+          GIT_API_TAGGING: false
+          INITIAL_VERSION: 1.0.0
+
+      - name: Generate Changelog
+        id: generate_changelog
+        uses: https://gitee.com/youtellme/simple-changelog-action@v1
+        with:
+          new_tag: ${{ steps.tag_version.outputs.new_tag }}
+          old_tag: ${{ steps.tag_version.outputs.old_tag }}
+
+      - name: create release
+        uses: https://gitee.com/youtellme/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.generate_changelog.outputs.changelog }}
+          files: dist.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - env:
           GITHUB_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm release
